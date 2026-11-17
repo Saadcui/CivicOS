@@ -1,0 +1,225 @@
+YOLO DATASET VALIDATION REPORT
+Dataset: D:\ML\AI-Based City Surveillance
+===========================================================================
+
+CATEGORY: cracks
+---------------------------------------------------------------------------
+Images: 166
+Label files: 166
+Images without labels: 0
+Labels without images: 0
+Label validation errors: 0
+Warnings: 0
+Visual review sheets created: 6
+
+CATEGORY: good_road
+---------------------------------------------------------------------------
+Images: 100
+Label files: 100
+Images without labels: 0
+Labels without images: 0
+WARNING: 7001.txt: Empty label file (no objects annotated)
+WARNING: 7002.txt: Empty label file (no objects annotated)
+WARNING: 7003.txt: Empty label file (no objects annotated)
+WARNING: 7004.txt: Empty label file (no objects annotated)
+WARNING: 7005.txt: Empty label file (no objects annotated)
+WARNING: 7006.txt: Empty label file (no objects annotated)
+WARNING: 7601.txt: Empty label file (no objects annotated)
+WARNING: 7602.txt: Empty label file (no objects annotated)
+WARNING: 7603.txt: Empty label file (no objects annotated)
+WARNING: 7604.txt: Empty label file (no objects annotated)
+WARNING: 7605.txt: Empty label file (no objects annotated)
+WARNING: 7606.txt: Empty label file (no objects annotated)
+WARNING: 7607.txt: Empty label file (no objects annotated)
+WARNING: 7608.txt: Empty label file (no objects annotated)
+WARNING: 7609.txt: Empty label file (no objects annotated)
+WARNING: 7610.txt: Empty label file (no objects annotated)
+WARNING: 7611.txt: Empty label file (no objects annotated)
+WARNING: 7612.txt: Empty label file (no objects annotated)
+WARNING: 7613.txt: Empty label file (no objects annotated)
+WARNING: 7614.txt: Empty label file (no objects annotated)
+WARNING: 7615.txt: Empty label file (no objects annotated)
+WARNING: 7616.txt: Empty label file (no objects annotated)
+WARNING: 7617.txt: Empty label file (no objects annotated)
+WARNING: 7618.txt: Empty label file (no objects annotated)
+WARNING: 7619.txt: Empty label file (no objects annotated)
+WARNING: 7620.txt: Empty label file (no objects annotated)
+WARNING: 7621.txt: Empty label file (no objects annotated)
+WARNING: 7622.txt: Empty label file (no objects annotated)
+WARNING: 7623.txt: Empty label file (no objects annotated)
+WARNING: 7624.txt: Empty label file (no objects annotated)
+WARNING: 7625.txt: Empty label file (no objects annotated)
+WARNING: 7626.txt: Empty label file (no objects annotated)
+WARNING: 7627.txt: Empty label file (no objects annotated)
+WARNING: 7628.txt: Empty label file (no objects annotated)
+WARNING: 7629.txt: Empty label file (no objects annotated)
+WARNING: 7630.txt: Empty label file (no objects annotated)
+WARNING: 7631.txt: Empty label file (no objects annotated)
+WARNING: 7632.txt: Empty label file (no objects annotated)
+WARNING: 7633.txt: Empty label file (no objects annotated)
+WARNING: 7634.txt: Empty label file (no objects annotated)
+WARNING: 7635.txt: Empty label file (no objects annotated)
+WARNING: 7636.txt: Empty label file (no objects annotated)
+WARNING: 7701.txt: Empty label file (no objects annotated)
+WARNING: 7702.txt: Empty label file (no objects annotated)
+WARNING: 7703.txt: Empty label file (no objects annotated)
+WARNING: 7704.txt: Empty label file (no objects annotated)
+WARNING: 7705.txt: Empty label file (no objects annotated)
+WARNING: 7706.txt: Empty label file (no objects annotated)
+WARNING: 7707.txt: Empty label file (no objects annotated)
+WARNING: 7708.txt: Empty label file (no objects annotated)
+WARNING: 7709.txt: Empty label file (no objects annotated)
+WARNING: 7710.txt: Empty label file (no objects annotated)
+WARNING: 7711.txt: Empty label file (no objects annotated)
+WARNING: 7712.txt: Empty label file (no objects annotated)
+WARNING: 7713.txt: Empty label file (no objects annotated)
+WARNING: 7714.txt: Empty label file (no objects annotated)
+WARNING: 7715.txt: Empty label file (no objects annotated)
+WARNING: 7716.txt: Empty label file (no objects annotated)
+WARNING: 7717.txt: Empty label file (no objects annotated)
+WARNING: 7718.txt: Empty label file (no objects annotated)
+WARNING: 7719.txt: Empty label file (no objects annotated)
+WARNING: 7801.txt: Empty label file (no objects annotated)
+WARNING: 7802.txt: Empty label file (no objects annotated)
+WARNING: 7803.txt: Empty label file (no objects annotated)
+WARNING: 7804.txt: Empty label file (no objects annotated)
+WARNING: 7805.txt: Empty label file (no objects annotated)
+WARNING: 7806.txt: Empty label file (no objects annotated)
+WARNING: 7807.txt: Empty label file (no objects annotated)
+WARNING: 7808.txt: Empty label file (no objects annotated)
+WARNING: 7809.txt: Empty label file (no objects annotated)
+WARNING: 7810.txt: Empty label file (no objects annotated)
+WARNING: 7811.txt: Empty label file (no objects annotated)
+WARNING: 7812.txt: Empty label file (no objects annotated)
+WARNING: 7813.txt: Empty label file (no objects annotated)
+WARNING: 7814.txt: Empty label file (no objects annotated)
+WARNING: 7815.txt: Empty label file (no objects annotated)
+WARNING: 7816.txt: Empty label file (no objects annotated)
+WARNING: 7817.txt: Empty label file (no objects annotated)
+WARNING: 7818.txt: Empty label file (no objects annotated)
+WARNING: 7819.txt: Empty label file (no objects annotated)
+WARNING: 7820.txt: Empty label file (no objects annotated)
+WARNING: 7821.txt: Empty label file (no objects annotated)
+WARNING: 7901.txt: Empty label file (no objects annotated)
+WARNING: 7902.txt: Empty label file (no objects annotated)
+WARNING: 7903.txt: Empty label file (no objects annotated)
+WARNING: 7904.txt: Empty label file (no objects annotated)
+WARNING: 7905.txt: Empty label file (no objects annotated)
+WARNING: 7906.txt: Empty label file (no objects annotated)
+WARNING: 7907.txt: Empty label file (no objects annotated)
+WARNING: 7908.txt: Empty label file (no objects annotated)
+WARNING: 7909.txt: Empty label file (no objects annotated)
+WARNING: 7910.txt: Empty label file (no objects annotated)
+WARNING: 7911.txt: Empty label file (no objects annotated)
+WARNING: 7912.txt: Empty label file (no objects annotated)
+WARNING: 7913.txt: Empty label file (no objects annotated)
+WARNING: 7914.txt: Empty label file (no objects annotated)
+WARNING: 7915.txt: Empty label file (no objects annotated)
+WARNING: 7916.txt: Empty label file (no objects annotated)
+WARNING: 7917.txt: Empty label file (no objects annotated)
+WARNING: 7918.txt: Empty label file (no objects annotated)
+Label validation errors: 0
+Warnings: 100
+Visual review sheets created: 4
+
+CATEGORY: open_manhole
+---------------------------------------------------------------------------
+Images: 152
+Label files: 152
+Images without labels: 0
+Labels without images: 0
+Label validation errors: 0
+Warnings: 0
+Visual review sheets created: 6
+
+CATEGORY: pothole
+---------------------------------------------------------------------------
+Images: 300
+Label files: 300
+Images without labels: 0
+Labels without images: 0
+Label validation errors: 0
+Warnings: 0
+Visual review sheets created: 10
+
+CATEGORY: waste_container
+---------------------------------------------------------------------------
+Images: 600
+Label files: 600
+Images without labels: 0
+Labels without images: 0
+Label validation errors: 0
+Warnings: 0
+Visual review sheets created: 20
+
+===========================================================================
+OVERALL SUMMARY
+Total images checked: 1318
+Label files paired and read: 1318
+Total errors: 0
+Total warnings: 100
+Visual review sheets: 46
+Review sheets folder: D:\ML\AI-Based City Surveillance\validation_review_sheets
+
+NOTE: A structurally valid bounding box is not necessarily drawn around the correct object. Open the review sheets and visually confirm that each box surrounds the intended road defect/object.
+
+NOTE: Confirm EXPECTED_CLASS_IDS above matches the class order in data.yaml.
+
+
+. AI Infrastructure Monitoring
+
+Road crack and pothole detection
+
+Open or damaged manhole detection
+
+Garbage accumulation detection
+
+Damaged streetlight detection
+
+Figure 5 - from A Framework in Developing a Citizen-Centered
+ 
+2. Citizen Complaint Portal
+
+Citizens submit complaints with photos
+
+GPS-based location tagging
+
+Complaint tracking
+
+Complaint status and resolution updates
+
+La gobernanza del dato y la automatización de decisiones marcarán la evolución de las ciudades inteligentes en 2026
+ 
+3. Government Admin Dashboard
+
+City-wide issue monitoring
+
+Department-wise complaint management
+
+Assign tasks to municipal teams
+
+Monitor pending and resolved issues
+
+David Suárez Perera | Consultoría GIS · Teledetección, Planificación Territorial e Ingeniería de Geodatos
+ 
+4. GIS & Smart City Mapping
+
+Interactive city map
+
+Location-based issue visualization
+
+Problem hotspots
+
+Area-wise infrastructure reports
+
+Reduce Downtime with AI-Enabled Predictive Maintenance System | MultiQoS
+ 
+5. AI Analytics & Intelligence
+
+Automatic issue classification
+
+Severity assessment
+
+Duplicate complaint detection
+
+Predictive maintenance insights
