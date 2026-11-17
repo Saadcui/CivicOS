@@ -1,12 +1,12 @@
 .venv/
 
-cracks/
-good_road/
-open_manhole/
-pothole/
-waste_container/
-labels_backup_20261116_015232/
-validation_review_sheets/
+/cracks/
+/good_road/
+/open_manhole/
+/pothole/
+/waste_container/
+/labels_backup_20261116_015232/
+/validation_review_sheets/
 
 __pycache__/
 *.pyc
