@@ -1,0 +1,35 @@
+.venv/
+
+# Local datasets and generated datasets
+Data_sets/
+dataset/
+data/
+
+/cracks/
+/good_road/
+/open_manhole/
+/pothole/
+/waste_container/
+/labels_backup*/
+/validation_review_sheets/
+/yolo_dataset/
+/yolo_dataset_crack_oversampled/
+
+# Training output and model binaries
+/runs/
+*.pt
+*.pth
+*.onnx
+*.engine
+*.tflite
+*.zip
+
+# Environment and generated API output
+.env
+.env.*
+!.env.example
+model_weights/
+camera_config.json
+
+__pycache__/
+*.pyc

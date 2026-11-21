@@ -1,0 +1,22 @@
+[
+  {
+    "camera": 0,
+    "cameraId": "LAPTOP-CAMERA-01",
+    "address": "Laptop test camera",
+    "city": "Metropolis",
+    "lat": null,
+    "lng": null,
+    "threshold": 0.25,
+    "interval": 5
+  },
+  {
+    "camera": "rtsp://username:password@camera-ip:554/stream",
+    "cameraId": "ROAD-CAMERA-02",
+    "address": "Main Road, Ward 1",
+    "city": "Metropolis",
+    "lat": 12.9716,
+    "lng": 77.5946,
+    "threshold": 0.25,
+    "interval": 5
+  }
+]

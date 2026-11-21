@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap');
+
+:root {
+  --background: #F3F3EC;
+  --coral: #FF6748;
+  --navy: #172B4D;
+  --teal: #159A8A;
+  --card: #FFFFFF;
+  --border: #DADAD2;
+  --text-primary: #171717;
+  --text-secondary: #77776F;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--text-primary);
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, .font-display {
+  font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+  letter-spacing: -0.03em;
+}
+
+/* Custom Component Classes */
+@layer components {
+  .btn-coral {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full font-semibold text-white bg-coral hover:bg-coral-dark active:scale-[0.98] transition-all shadow-sm;
+  }
+
+  .btn-navy {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full font-semibold text-white bg-navy hover:bg-navy-light active:scale-[0.98] transition-all shadow-sm;
+  }
+
+  .btn-outline-navy {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full font-semibold text-navy border-2 border-navy hover:bg-navy hover:text-white active:scale-[0.98] transition-all;
+  }
+
+  .btn-outline-white {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full font-semibold text-white border-2 border-white/80 hover:bg-white hover:text-navy active:scale-[0.98] transition-all;
+  }
+
+  .civic-card {
+    @apply bg-white rounded-2xl border border-border p-6 shadow-[0_2px_8px_rgba(0,0,0,0.04)] transition-all;
+  }
+
+  .civic-input {
+    @apply w-full rounded-xl border border-border bg-white px-4 py-3 text-text-primary text-sm placeholder:text-text-secondary/60 focus:border-coral focus:outline-none focus:ring-2 focus:ring-coral/20 transition-all;
+  }
+
+  /* Status Badges */
+  .badge-pending {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-200/60;
+  }
+  .badge-review {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-800 border border-blue-200/60;
+  }
+  .badge-assigned {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-purple-50 text-purple-800 border border-purple-200/60;
+  }
+  .badge-progress {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-orange-50 text-orange-800 border border-orange-200/60;
+  }
+  .badge-resolved {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200/60;
+  }
+  .badge-rejected {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-rose-50 text-rose-800 border border-rose-200/60;
+  }
+}
