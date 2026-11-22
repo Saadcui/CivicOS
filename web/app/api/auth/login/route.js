@@ -58,6 +58,7 @@ export async function POST(request) {
       name: user.name,
       role: user.role,
       department: user.department || null,
+      avatar: user.avatar || null,
     };
 
     const token = await signToken(tokenPayload);

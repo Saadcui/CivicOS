@@ -15,8 +15,12 @@ export default async function OfficerComplaintsPage({ searchParams }) {
 
   // Strict RBAC: filter by department
   const query = {};
-  if (user.role === 'officer' && user.department) {
-    query.department = user.department;
+  if (user.role === 'officer') {
+    if (!user.department) {
+      query._id = null;
+    } else {
+      query.department = user.department;
+    }
   }
 
   if (searchParams?.source) {
@@ -24,6 +28,9 @@ export default async function OfficerComplaintsPage({ searchParams }) {
   }
   if (searchParams?.status && searchParams.status !== 'All') {
     query.status = searchParams.status;
+  }
+  if (searchParams?.assigned === 'me') {
+    query.assignedTo = user.userId;
   }
 
   let complaints = [];
@@ -38,10 +45,14 @@ export default async function OfficerComplaintsPage({ searchParams }) {
     <div className="space-y-6">
       <div>
         <span className="text-xs font-bold uppercase tracking-widest text-teal block mb-1">
-          Authorized Case Records
+          {searchParams?.assigned === 'me' ? 'My Field Assignments' : 'Authorized Case Records'}
         </span>
         <h1 className="text-2xl sm:text-3xl font-black font-display text-navy">
-          {user.department ? `${user.department} Complaints` : 'Department Complaints'}
+          {searchParams?.assigned === 'me'
+            ? 'Assigned to Me'
+            : user.department
+              ? `${user.department} Complaints`
+              : 'Department Complaints'}
         </h1>
         <p className="text-xs text-text-secondary mt-0.5">
           Triage incoming citizen reports and verify autonomous CCTV anomaly detections.
@@ -53,6 +64,7 @@ export default async function OfficerComplaintsPage({ searchParams }) {
         baseRoute="/officer/complaints"
         currentRole="officer"
         department={user.department}
+        officerId={user.userId}
       />
     </div>
   );

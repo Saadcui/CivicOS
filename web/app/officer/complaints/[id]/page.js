@@ -35,8 +35,22 @@ export default async function OfficerComplaintDetailPage({ params }) {
 
   // STRICT RBAC CHECK FOR OFFICER:
   // Must match officer's department (Admin can view all)
-  if (user.role === 'officer' && complaint.department && complaint.department !== user.department) {
+  if (
+    user.role === 'officer'
+    && (!user.department || complaint.department !== user.department)
+  ) {
     redirect('/access-denied');
+  }
+
+  const assignedOfficerId =
+    typeof complaint.assignedTo === 'object'
+      ? complaint.assignedTo?._id?.toString()
+      : complaint.assignedTo?.toString();
+  if (
+    user.role === 'officer'
+    && (!assignedOfficerId || assignedOfficerId !== user.userId)
+  ) {
+    redirect('/officer/complaints');
   }
 
   return (

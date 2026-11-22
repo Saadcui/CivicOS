@@ -3,7 +3,7 @@ import connectDB from '@/lib/db';
 import Complaint from '@/models/Complaint';
 import User from '@/models/User';
 import Department from '@/models/Department';
-import { BarChart3, CheckCircle2, Download, ShieldCheck, Activity, Users, Camera } from 'lucide-react';
+import { ShieldCheck } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -54,13 +54,6 @@ export default async function AdminReportsPage() {
           </p>
         </div>
 
-        <button
-          type="button"
-          className="btn-coral py-2.5 px-5 text-xs font-bold inline-flex items-center gap-2 self-start sm:self-auto shadow-md"
-        >
-          <Download size={14} />
-          <span>Export City Master Audit (PDF)</span>
-        </button>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -69,7 +62,7 @@ export default async function AdminReportsPage() {
             Global Resolution Rate
           </div>
           <div className="text-3xl font-black font-display text-teal">{resolutionRate}%</div>
-          <div className="text-xs text-emerald-600 font-semibold mt-1">Exceeding 85% SLA</div>
+          <div className="text-xs text-text-secondary mt-1">Based on resolved complaints</div>
         </div>
 
         <div className="civic-card p-5">

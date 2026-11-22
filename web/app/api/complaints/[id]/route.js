@@ -50,12 +50,22 @@ export async function GET(request, { params }) {
 
     // Officer RBAC check
     if (user.role === 'officer') {
-      if (complaint.department && complaint.department !== user.department) {
+      if (!user.department || complaint.department !== user.department) {
         return NextResponse.json(
           {
             success: false,
             error: `Forbidden: This complaint belongs to '${complaint.department}', but you are assigned to '${user.department}'`,
           },
+          { status: 403 }
+        );
+      }
+      const assignedId =
+        complaint.assignedTo?._id
+          ? complaint.assignedTo._id.toString()
+          : complaint.assignedTo?.toString();
+      if (!assignedId || assignedId !== user.userId) {
+        return NextResponse.json(
+          { success: false, error: 'Forbidden: This complaint is assigned to another officer' },
           { status: 403 }
         );
       }
@@ -100,12 +110,28 @@ export async function PATCH(request, { params }) {
 
     // Officer department check
     if (user.role === 'officer') {
-      if (complaint.department && complaint.department !== user.department) {
+      if (!user.department || complaint.department !== user.department) {
         return NextResponse.json(
           {
             success: false,
             error: 'Forbidden: Cannot update complaint belonging to another department',
           },
+          { status: 403 }
+        );
+      }
+      const assignedId =
+        complaint.assignedTo?._id
+          ? complaint.assignedTo._id.toString()
+          : complaint.assignedTo?.toString();
+      if (!assignedId || assignedId !== user.userId) {
+        return NextResponse.json(
+          { success: false, error: 'Forbidden: This complaint is assigned to another officer' },
+          { status: 403 }
+        );
+      }
+      if (body.assignedTo !== undefined || body.assignedToName !== undefined || body.assignedToEmail !== undefined) {
+        return NextResponse.json(
+          { success: false, error: 'Forbidden: Officers cannot assign complaints' },
           { status: 403 }
         );
       }
@@ -171,13 +197,24 @@ export async function DELETE(request, { params }) {
 
     if (
       user.role === 'officer'
-      && complaint.department
-      && complaint.department !== user.department
+      && (!user.department || complaint.department !== user.department)
     ) {
       return NextResponse.json(
         { success: false, error: 'Forbidden: Cannot delete another department complaint' },
         { status: 403 }
       );
+    }
+    if (user.role === 'officer') {
+      const assignedId =
+        complaint.assignedTo?._id
+          ? complaint.assignedTo._id.toString()
+          : complaint.assignedTo?.toString();
+      if (!assignedId || assignedId !== user.userId) {
+        return NextResponse.json(
+          { success: false, error: 'Forbidden: This complaint is assigned to another officer' },
+          { status: 403 }
+        );
+      }
     }
 
     await Complaint.deleteOne({ _id: complaint._id });

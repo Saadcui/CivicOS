@@ -22,6 +22,7 @@ import {
   Layers,
   Trash2,
 } from 'lucide-react';
+import ComplaintLocationMap from '@/components/ComplaintLocationMap';
 
 const STATUS_OPTIONS = ['Pending', 'Under Review', 'Assigned', 'In Progress', 'Resolved', 'Rejected'];
 
@@ -32,6 +33,9 @@ export default function ComplaintDetailManager({ complaint, user, backHref = '/o
   const [remarkInput, setRemarkInput] = useState('');
   const [evidenceUrl, setEvidenceUrl] = useState('');
   const [assignedToInput, setAssignedToInput] = useState(complaint.assignedToName || user.name);
+  const [assignedOfficerEmail, setAssignedOfficerEmail] = useState(
+    typeof complaint.assignedTo === 'object' ? complaint.assignedTo?.email || '' : ''
+  );
   const [savingStatus, setSavingStatus] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [message, setMessage] = useState({ text: '', type: '' });
@@ -50,6 +54,10 @@ export default function ComplaintDetailManager({ complaint, user, backHref = '/o
           status: targetStatus,
           remark: remarkInput.trim() || undefined,
           assignedToName: assignedToInput.trim() || undefined,
+          assignedTo: undefined,
+          assignedToEmail: user.role === 'admin' && assignedOfficerEmail.trim()
+            ? assignedOfficerEmail.trim().toLowerCase()
+            : undefined,
           resolutionEvidence: evidenceUrl.trim() ? [evidenceUrl.trim()] : undefined,
         }),
       });
@@ -111,15 +119,17 @@ export default function ComplaintDetailManager({ complaint, user, backHref = '/o
           <ArrowLeft size={16} />
           <span>Back to Complaints Queue</span>
         </Link>
-        <button
-          type="button"
-          onClick={handleDelete}
-          disabled={deleting}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-rose-200 bg-rose-50 text-rose-700 text-xs font-bold hover:bg-rose-100 disabled:opacity-60"
-        >
-          <Trash2 size={15} />
-          {deleting ? 'Deleting...' : 'Delete Complaint'}
-        </button>
+        {user.role === 'admin' && (
+          <button
+            type="button"
+            onClick={handleDelete}
+            disabled={deleting}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-rose-200 bg-rose-50 text-rose-700 text-xs font-bold hover:bg-rose-100 disabled:opacity-60"
+          >
+            <Trash2 size={15} />
+            {deleting ? 'Deleting...' : 'Delete Complaint'}
+          </button>
+        )}
       </div>
 
       {message.text && (
@@ -278,6 +288,10 @@ export default function ComplaintDetailManager({ complaint, user, backHref = '/o
                 <span className="text-text-secondary">{complaint.location?.address}</span>
               </div>
             </div>
+
+            {complaint.location?.address && (
+              <ComplaintLocationMap location={complaint.location} />
+            )}
           </div>
         </div>
       </div>
@@ -288,9 +302,11 @@ export default function ComplaintDetailManager({ complaint, user, backHref = '/o
           <span className="text-xs font-bold uppercase tracking-widest text-coral block mb-1">
             Officer Action Center
           </span>
-          <h2 className="text-xl font-bold font-display text-navy">
-            Update Status, Assign Crew & Add Remarks
-          </h2>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <h2 className="text-xl font-bold font-display text-navy">
+              Update Status, Assign Crew & Add Remarks
+            </h2>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -318,15 +334,29 @@ export default function ComplaintDetailManager({ complaint, user, backHref = '/o
           {/* Assigned Officer */}
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-text-primary mb-2">
-              Assigned Field Officer Name
+              {user.role === 'admin' ? 'Assigned Officer Email' : 'Assigned Field Officer Name'}
             </label>
-            <input
-              type="text"
-              value={assignedToInput}
-              onChange={(e) => setAssignedToInput(e.target.value)}
-              placeholder="e.g. Marcus Brody"
-              className="civic-input"
-            />
+            {user.role === 'admin' ? (
+              <input
+                type="email"
+                value={assignedOfficerEmail}
+                onChange={(e) => setAssignedOfficerEmail(e.target.value)}
+                placeholder="officer@department.gov"
+                className="civic-input"
+              />
+            ) : (
+              <input
+                type="text"
+                value={complaint.assignedToName || 'Assigned Officer'}
+                readOnly
+                className="civic-input bg-[#F3F3EC] text-text-secondary"
+              />
+            )}
+            {user.role === 'admin' && (
+              <p className="text-[11px] text-text-secondary mt-1">
+                Enter an active officer email from this complaint&apos;s department.
+              </p>
+            )}
           </div>
         </div>
 

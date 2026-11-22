@@ -39,6 +39,7 @@ export default function ComplaintsTable({
   baseRoute = '/officer/complaints',
   currentRole = 'officer',
   department = null,
+  officerId = null,
 }) {
   const [sourceFilter, setSourceFilter] = useState('All');
   const [statusFilter, setStatusFilter] = useState('All');
@@ -157,12 +158,28 @@ export default function ComplaintsTable({
                 <tr key={c._id.toString()} className="hover:bg-[#F3F3EC]/50 transition-colors">
                   {/* ID */}
                   <td className="py-4 px-6 font-mono font-bold text-navy">
-                    <Link
-                      href={`${baseRoute}/${c._id}`}
-                      className="hover:text-coral transition-colors flex items-center gap-1"
-                    >
-                      <span>{c.complaintId || 'CIV-TICKET'}</span>
-                    </Link>
+                    {(() => {
+                      const assignedId =
+                        typeof c.assignedTo === 'object'
+                          ? c.assignedTo?._id?.toString()
+                          : c.assignedTo?.toString();
+                      const canReview =
+                        currentRole === 'admin'
+                        || (currentRole === 'officer' && assignedId === officerId);
+
+                      return canReview ? (
+                        <Link
+                          href={`${baseRoute}/${c._id}`}
+                          className="hover:text-coral transition-colors flex items-center gap-1"
+                        >
+                          <span>{c.complaintId || 'CIV-TICKET'}</span>
+                        </Link>
+                      ) : (
+                        <span className="text-text-secondary cursor-not-allowed">
+                          {c.complaintId || 'CIV-TICKET'}
+                        </span>
+                      );
+                    })()}
                   </td>
 
                   {/* Category & Title */}
@@ -208,13 +225,34 @@ export default function ComplaintsTable({
 
                   {/* Action */}
                   <td className="py-4 px-6 text-right whitespace-nowrap">
-                    <Link
-                      href={`${baseRoute}/${c._id}`}
-                      className="btn-outline-navy py-1.5 px-3 text-[11px] font-bold inline-flex items-center gap-1 hover:bg-coral hover:border-coral hover:text-white"
-                    >
-                      <span>Review</span>
-                      <ChevronRight size={13} />
-                    </Link>
+                    {(() => {
+                      const assignedId =
+                        typeof c.assignedTo === 'object'
+                          ? c.assignedTo?._id?.toString()
+                          : c.assignedTo?.toString();
+                      const canReview =
+                        currentRole === 'admin'
+                        || (currentRole === 'officer' && assignedId === officerId);
+
+                      return canReview ? (
+                        <Link
+                          href={`${baseRoute}/${c._id}`}
+                          className="btn-outline-navy py-1.5 px-3 text-[11px] font-bold inline-flex items-center gap-1 hover:bg-coral hover:border-coral hover:text-white"
+                        >
+                          <span>Review</span>
+                          <ChevronRight size={13} />
+                        </Link>
+                      ) : (
+                        <button
+                          type="button"
+                          disabled
+                          className="py-1.5 px-3 text-[11px] font-bold inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-slate-100 text-slate-400 cursor-not-allowed"
+                          title="Only the assigned officer can review this complaint"
+                        >
+                          <span>Assigned to another officer</span>
+                        </button>
+                      );
+                    })()}
                   </td>
                 </tr>
               ))

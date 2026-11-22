@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import {
   Shield,
   LayoutDashboard,
@@ -11,10 +11,10 @@ import {
   Camera,
   Building2,
   UserCheck,
+  User,
   BarChart3,
   MapPin,
   Bell,
-  Settings,
   LogOut,
   ChevronRight,
   Menu,
@@ -27,6 +27,7 @@ import {
 
 export default function GovernmentLayout({ children, user }) {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
@@ -47,6 +48,18 @@ export default function GovernmentLayout({ children, user }) {
       href: isAdmin ? '/admin/complaints' : '/officer/complaints',
       icon: FileText,
       roles: ['officer', 'admin'],
+    },
+    {
+      label: 'Assigned to Me',
+      href: '/officer/complaints?assigned=me',
+      icon: UserCheck,
+      roles: ['officer'],
+    },
+    {
+      label: 'My Profile',
+      href: '/officer/profile',
+      icon: User,
+      roles: ['officer'],
     },
     {
       label: 'Citizen Complaints',
@@ -84,7 +97,7 @@ export default function GovernmentLayout({ children, user }) {
       label: 'Reports & Analytics',
       href: isAdmin ? '/admin/reports' : '/officer/reports',
       icon: BarChart3,
-      roles: ['officer', 'admin'],
+      roles: ['admin'],
     },
     {
       label: 'Geographic Map',
@@ -92,18 +105,35 @@ export default function GovernmentLayout({ children, user }) {
       icon: MapPin,
       roles: ['officer', 'admin'],
     },
-    {
-      label: 'System Settings',
-      href: '/admin/settings',
-      icon: Settings,
-      roles: ['admin'], // Hidden from officers!
-    },
   ];
 
   // Filter items visible to current user's role
   const visibleNavItems = allNavItems.filter((item) =>
     item.roles.includes(user?.role)
   );
+
+  const isNavActive = (item) => {
+    const [basePath, queryString = ''] = item.href.split('?');
+    if (pathname !== basePath) {
+      const isComplaintDetail =
+        (basePath === '/admin/complaints' || basePath === '/officer/complaints')
+        && pathname.startsWith(`${basePath}/`);
+      if (!isComplaintDetail || queryString) return false;
+    }
+
+    if (!queryString) {
+      if (basePath === '/admin/complaints' || basePath === '/officer/complaints') {
+        return !searchParams.has('source') && !searchParams.has('assigned');
+      }
+      return pathname === basePath;
+    }
+
+    const expectedParams = new URLSearchParams(queryString);
+    for (const [key, value] of expectedParams.entries()) {
+      if (searchParams.get(key) !== value) return false;
+    }
+    return true;
+  };
 
   const handleLogout = async () => {
     setLoggingOut(true);
@@ -171,11 +201,7 @@ export default function GovernmentLayout({ children, user }) {
             </div>
 
             {visibleNavItems.map((item) => {
-              const isActive =
-                pathname === item.href ||
-                (item.href !== '/admin' &&
-                  item.href !== '/officer' &&
-                  pathname.startsWith(item.href.split('?')[0]));
+              const isActive = isNavActive(item);
 
               return (
                 <Link
@@ -283,17 +309,25 @@ export default function GovernmentLayout({ children, user }) {
               </Link>
 
               <div className="space-y-1">
-                {visibleNavItems.map((item) => (
-                  <Link
-                    key={item.label}
-                    href={item.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-white/80 hover:bg-white/10"
-                  >
-                    <item.icon size={16} />
-                    <span>{item.label}</span>
-                  </Link>
-                ))}
+                {visibleNavItems.map((item) => {
+                  const isActive = isNavActive(item);
+                  return (
+                    <Link
+                      key={item.label}
+                      href={item.href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                        isActive
+                          ? 'bg-coral text-white'
+                          : 'text-white/80 hover:bg-white/10'
+                      }`}
+                    >
+                      <item.icon size={16} className={isActive ? 'text-white' : 'text-white/60'} />
+                      <span>{item.label}</span>
+                      {isActive && <ChevronRight size={14} className="ml-auto opacity-80" />}
+                    </Link>
+                  );
+                })}
               </div>
             </div>
 
@@ -316,7 +350,9 @@ export default function GovernmentLayout({ children, user }) {
         <header className="hidden lg:flex h-20 bg-white border-b border-border px-8 items-center justify-between sticky top-0 z-20">
           <div className="flex items-center gap-4">
             <span className="text-xs font-bold uppercase tracking-wider text-text-secondary">
-              {isAdmin ? 'Municipal Executive Administration' : `Department: ${user?.department || 'Field Ops'}`}
+              {isAdmin
+                ? 'Municipal Executive Administration'
+                : `Department: ${user?.department || 'Not Assigned'}`}
             </span>
             <span className="text-xs text-text-secondary">•</span>
             <span className="text-xs text-teal font-mono">🟢 Optical AI Vision Online</span>
@@ -343,21 +379,32 @@ export default function GovernmentLayout({ children, user }) {
 
             <div className="h-6 w-px bg-border"></div>
 
-            <div className="flex items-center gap-3">
-              <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs text-white ${
-                  isAdmin ? 'bg-coral' : 'bg-teal'
-                }`}
-              >
-                {user?.name?.charAt(0) || 'G'}
-              </div>
+            <Link
+              href={isAdmin ? '/admin/complaints' : '/officer/profile'}
+              className="flex items-center gap-3 rounded-xl px-2 py-1 hover:bg-[#F3F3EC] transition-colors"
+            >
+              {user?.avatar ? (
+                <img
+                  src={user.avatar}
+                  alt={user.name || 'Officer'}
+                  className="w-8 h-8 rounded-full object-cover border border-border"
+                />
+              ) : (
+                <div
+                  className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs text-white ${
+                    isAdmin ? 'bg-coral' : 'bg-teal'
+                  }`}
+                >
+                  {user?.name?.charAt(0) || 'G'}
+                </div>
+              )}
               <div className="text-left">
                 <div className="text-xs font-bold text-navy leading-none">{user?.name}</div>
                 <div className="text-[10px] text-text-secondary uppercase mt-0.5">
                   {user?.role}
                 </div>
               </div>
-            </div>
+            </Link>
           </div>
         </header>
 

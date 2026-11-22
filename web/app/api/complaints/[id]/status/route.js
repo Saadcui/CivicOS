@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import connectDB from '@/lib/db';
 import Complaint from '@/models/Complaint';
+import User from '@/models/User';
 import { requireAuth } from '@/lib/apiAuth';
 
 /**
@@ -18,7 +19,7 @@ export async function POST(request, { params }) {
   try {
     const { id } = params;
     const body = await request.json();
-    const { status, remark, resolutionEvidence, assignedTo, assignedToName } = body;
+    const { status, remark, resolutionEvidence, assignedTo, assignedToEmail, assignedToName } = body;
 
     await connectDB();
     const complaint = await Complaint.findById(id);
@@ -32,12 +33,28 @@ export async function POST(request, { params }) {
 
     // Officer department check
     if (user.role === 'officer') {
-      if (complaint.department && complaint.department !== user.department) {
+      if (!user.department || complaint.department !== user.department) {
         return NextResponse.json(
           {
             success: false,
             error: 'Forbidden: You cannot modify status for another department’s complaint',
           },
+          { status: 403 }
+        );
+      }
+      const assignedId =
+        complaint.assignedTo?._id
+          ? complaint.assignedTo._id.toString()
+          : complaint.assignedTo?.toString();
+      if (!assignedId || assignedId !== user.userId) {
+        return NextResponse.json(
+          { success: false, error: 'Forbidden: This complaint is assigned to another officer' },
+          { status: 403 }
+        );
+      }
+      if (assignedTo || assignedToEmail) {
+        return NextResponse.json(
+          { success: false, error: 'Forbidden: Officers cannot assign complaints' },
           { status: 403 }
         );
       }
@@ -60,6 +77,35 @@ export async function POST(request, { params }) {
     if (assignedTo) {
       complaint.assignedTo = assignedTo;
       complaint.assignedToName = assignedToName || user.name;
+    }
+
+    if (user.role === 'admin' && assignedToEmail) {
+      const cleanEmail = String(assignedToEmail).toLowerCase().trim();
+      const officer = await User.findOne({
+        email: cleanEmail,
+        role: 'officer',
+        isActive: true,
+      }).select('_id name email department');
+
+      if (!officer) {
+        return NextResponse.json(
+          { success: false, error: 'No active officer account exists with that email' },
+          { status: 400 }
+        );
+      }
+
+      if (!complaint.department || officer.department !== complaint.department) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: `Officer must belong to the complaint department: ${complaint.department || 'Unassigned'}`,
+          },
+          { status: 400 }
+        );
+      }
+
+      complaint.assignedTo = officer._id;
+      complaint.assignedToName = officer.name;
     }
 
     if (resolutionEvidence && Array.isArray(resolutionEvidence)) {

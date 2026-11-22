@@ -1,9 +1,8 @@
 import { getAuthUser } from '@/lib/auth';
 import connectDB from '@/lib/db';
 import Complaint from '@/models/Complaint';
-import GovernmentAnalytics from '@/components/officer/GovernmentAnalytics';
 import ComplaintsTable from '@/components/officer/ComplaintsTable';
-import { Shield, Sparkles, Building2, AlertCircle } from 'lucide-react';
+import { Building2, AlertCircle, FileText, Users, Camera, Clock } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -24,8 +23,12 @@ export default async function OfficerDashboardPage() {
     await connectDB();
 
     const scopeQuery = {};
-    if (user.role === 'officer' && user.department) {
-      scopeQuery.department = user.department;
+    if (user.role === 'officer') {
+      if (!user.department) {
+        scopeQuery._id = null;
+      } else {
+        scopeQuery.department = user.department;
+      }
     }
 
     [
@@ -72,20 +75,6 @@ export default async function OfficerDashboardPage() {
     resolutionRate: totalCount > 0 ? Math.round((resolvedCount / totalCount) * 100) : 0,
   };
 
-  const trendData = totalCount > 0 ? [
-    { month: 'Jun', citizen: Math.max(1, Math.floor(citizenCount * 0.1)), ai: Math.max(1, Math.floor(aiCount * 0.1)), resolved: Math.floor(resolvedCount * 0.1) },
-    { month: 'Jul', citizen: Math.max(2, Math.floor(citizenCount * 0.15)), ai: Math.max(1, Math.floor(aiCount * 0.15)), resolved: Math.floor(resolvedCount * 0.15) },
-    { month: 'Aug', citizen: Math.max(3, Math.floor(citizenCount * 0.2)), ai: Math.max(2, Math.floor(aiCount * 0.2)), resolved: Math.floor(resolvedCount * 0.2) },
-    { month: 'Sep', citizen: Math.max(4, Math.floor(citizenCount * 0.3)), ai: Math.max(3, Math.floor(aiCount * 0.3)), resolved: Math.floor(resolvedCount * 0.3) },
-    { month: 'Oct', citizen: Math.max(5, Math.floor(citizenCount * 0.4)), ai: Math.max(4, Math.floor(aiCount * 0.4)), resolved: Math.floor(resolvedCount * 0.4) },
-    { month: 'Nov', citizen: citizenCount, ai: aiCount, resolved: resolvedCount },
-  ] : [];
-
-  const categoryChartData = categoryStats.map((c) => ({
-    name: c._id || 'Other',
-    value: c.count,
-  }));
-
   return (
     <div className="space-y-8">
       {dbError && (
@@ -109,14 +98,19 @@ export default async function OfficerDashboardPage() {
           <div className="space-y-2">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-xs font-semibold text-teal-light">
               <Building2 size={14} />
-              <span>Department Authorization: {user.department || 'All Municipal Services'}</span>
+              <span>
+                Department Authorization:{' '}
+                {user.department || 'No Department Assigned'}
+              </span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-black font-display text-white">
               Officer Administration Console
             </h1>
             <p className="text-sm text-white/70 max-w-xl">
               Real-time dispatch, AI CCTV anomaly review, and municipal resolution tracking for{' '}
-              <strong className="text-white">{user.department || 'Municipal Command'}</strong>.
+              <strong className="text-white">
+                {user.department || 'No Department Assigned'}
+              </strong>.
             </p>
           </div>
 
@@ -131,14 +125,26 @@ export default async function OfficerDashboardPage() {
         </div>
       </div>
 
-      {/* Analytics Suite */}
-      <GovernmentAnalytics
-        stats={stats}
-        charts={{
-          trendData,
-          categoryChartData,
-        }}
-      />
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {[
+          { label: 'Department Complaints', value: stats.total, icon: FileText, color: 'text-navy bg-navy/5' },
+          { label: 'Citizen Reports', value: stats.citizen, icon: Users, color: 'text-coral bg-coral/10' },
+          { label: 'CCTV / AI', value: stats.ai, icon: Camera, color: 'text-teal bg-teal/10' },
+          { label: 'Pending Review', value: stats.pending, icon: Clock, color: 'text-amber-700 bg-amber-50' },
+        ].map((item) => (
+          <div key={item.label} className="civic-card p-5">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-xs font-bold uppercase tracking-wider text-text-secondary">
+                {item.label}
+              </span>
+              <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${item.color}`}>
+                <item.icon size={16} />
+              </div>
+            </div>
+            <div className="text-3xl font-black font-display text-navy">{item.value}</div>
+          </div>
+        ))}
+      </div>
 
       {/* Recent Complaints Table */}
       <div className="space-y-4">
@@ -147,7 +153,7 @@ export default async function OfficerDashboardPage() {
             Active Department Complaints
           </h2>
           <span className="text-xs text-text-secondary">
-            Authorized Scope: {user.department}
+            Authorized Scope: {user.department || 'No Department Assigned'}
           </span>
         </div>
 
@@ -156,6 +162,7 @@ export default async function OfficerDashboardPage() {
           baseRoute="/officer/complaints"
           currentRole="officer"
           department={user.department}
+          officerId={user.userId}
         />
       </div>
     </div>
